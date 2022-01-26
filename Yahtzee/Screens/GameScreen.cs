@@ -1,4 +1,4 @@
-﻿/* Taiyo + Charlie
+﻿ /* Taiyo + Charlie
  * Yahtzee
  * ICS4U
  * Mr. T
@@ -40,6 +40,8 @@ namespace Yahtzee
         //score / highscore objects
         int score;
         string name;
+        int chanceScore = 0;
+        int fourkindScore = 0;
         #endregion
 
         public GameScreen()
@@ -348,7 +350,33 @@ namespace Yahtzee
         }
         private void fourOfAkindLabel_Click(object sender, EventArgs e)
         {
-
+            List<Dice> fourkindValues = diceList.OrderBy(a => a.value).ToList();
+            fourkindScore = fourkindValues[0].value + fourkindValues[1].value + fourkindValues[2].value + fourkindValues[3].value + fourkindValues[4].value;
+            if (fourkindValues[0].value == fourkindValues[1].value)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    if (fourkindValues[i].value != fourkindValues[i + 1].value)
+                    {
+                        fourOfAkindLabel.Text = "0";
+                    }
+                }
+            }
+            else if (fourkindValues[0].value != fourkindValues[1].value)
+            {
+                for (int i = 1; i < 4; i++)
+                {
+                    if (fourkindValues[i].value != fourkindValues[i + 1].value)
+                    {
+                        fourOfAkindLabel.Text = "0";
+                    }
+                }
+            }
+            if (fourOfAkindLabel.Text != "0")
+            {
+                fourOfAkindLabel.Text = Convert.ToString(fourkindScore);
+            }
+            NewTurn();
         }
         private void fullhouseLabel_Click(object sender, EventArgs e)
         {
@@ -356,19 +384,59 @@ namespace Yahtzee
         }
         private void smStraightLabel_Click(object sender, EventArgs e)
         {
-
+            List<Dice> straightValues = diceList.OrderBy(a => a.value).ToList();
+            for (int i = 0; i < 4; i++)
+            {
+                if (straightValues[i].value != (straightValues[i + 1].value--))
+                {
+                    smStraightLabel.Text = "0";
+                }
+            }
+            if (smStraightLabel.Text != "0")
+            {
+                smStraightLabel.Text = "40";
+            }
+            NewTurn();
         }
         private void lgStraightLabel_Click(object sender, EventArgs e)
         {
-
+            List<Dice> straightValues = diceList.OrderBy(a => a.value).ToList();
+            for (int i = 0; i < 4; i++)
+            {
+                if (straightValues[i].value - straightValues[i + 1].value != -1)
+                {
+                    lgStraightLabel.Text = "0";
+                }
+            }
+            if (lgStraightLabel.Text != "0")
+            {
+                lgStraightLabel.Text = "40";
+            }
+            NewTurn();
         }
         private void yahtzeeLabel_Click(object sender, EventArgs e)
         {
-
+            for (int i=0; i < 4; i++)
+            {
+                if (diceList[i].value != diceList[i+1].value)
+                {
+                    yahtzeeLabel.Text = "0";
+                }
+            }
+            if (yahtzeeLabel.Text != "0")
+            {
+                yahtzeeLabel.Text = "50";
+            }
+            NewTurn();
         }
         private void chanceLabel_Click(object sender, EventArgs e)
         {
-
+            foreach(Dice Dice in diceList)
+            {
+               chanceScore += Dice.value;
+            }
+            chanceLabel.Text = chanceScore.ToString();
+            NewTurn();
         }
         #endregion
 
